@@ -1,42 +1,27 @@
-import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getTodos } from "./store/todos";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const inputRef = useRef(0);
-
-  const increment = () => {
-    // setCount(count + 1);
-    // setCount(count + 1);
-    // setCount(count + 1);
-    setCount((count) => count + 1)
-    setCount((count) => count + 1)
-    setCount((count) => count + 1)
-  };
+  const dispatch = useDispatch();
+  const { todos, error, loading } = useSelector((state) => state.todos);
 
   useEffect(() => {
-    console.log("current", inputRef.current);
-  }, []);
+    dispatch(getTodos());
+  }, [dispatch]);
+
+  if (loading) return <h1>Loading...</h1>;
+
+  if (error) return <h1 style={{ color: "red" }}>{error}</h1>
 
   return (
-    <>
-    <input type="text" ref={inputRef} />
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={increment}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ul>
+      {todos.map((todo) => (
+        <li>{todo.title}</li>
+      ))}
+    </ul>
+  );
 }
 
-export default App
+export default App;
